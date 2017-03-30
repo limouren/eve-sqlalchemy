@@ -172,6 +172,9 @@ class SQL(DataLayer):
 
         query = self.get_query_factory()(self.driver.session, model)
 
+        if config.DOMAIN[resource]['soft_delete'] and not req.show_deleted:
+            query = query.filter(getattr(model, config.DELETED).is_(False))
+
         if args['sort']:
             ql = []
             for sort_item in args['sort']:
